@@ -154,3 +154,50 @@ with tab3:
         for key in ["visual", "visual_effect", "audio", "audio_effect"]:
             render_feedback(results[key]["label_text"], results[key])
             st.divider()
+
+# ---------------------------------------------------------------------------
+# 하단: 안내 문구 + 처음부터 다시 풀기 버튼 (한 줄 배치)
+# ---------------------------------------------------------------------------
+def _reset_all_answers():
+    """세트1~3, 문항1~3에 입력된 모든 답안(session_state)을 초기화."""
+    target_infixes = ("_q1_", "_q2_", "_q3_")
+    keys_to_clear = [
+        k for k in st.session_state.keys() if any(infix in k for infix in target_infixes)
+    ]
+    for k in keys_to_clear:
+        del st.session_state[k]
+
+
+st.markdown("---")
+notice_col, button_col = st.columns([6, 1])
+with notice_col:
+    st.caption(
+        "모든 문제를 제출하면 복습할 내용 탭에서 틀린 개념을 확인할 수 있어요. "
+        "답안을 초기화하고 처음부터 다시 풀고 싶다면 다음의 버튼을 누르세요."
+    )
+with button_col:
+    if st.button("처음부터 다시 풀기", key="reset_all_button", use_container_width=True):
+        _reset_all_answers()
+        st.rerun()
+
+# key="reset_all_button" 버튼만 골라 파란색 · 작은 글씨의 링크 형태로 스타일링
+st.markdown(
+    """
+    <style>
+    .st-key-reset_all_button button {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #1a73e8 !important;
+        font-size: 0.8rem !important;
+        padding: 0.1rem 0 !important;
+    }
+    .st-key-reset_all_button button:hover {
+        color: #0b4fb3 !important;
+        text-decoration: underline !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
